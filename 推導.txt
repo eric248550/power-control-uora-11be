@@ -1,0 +1,49 @@
+# Eq. (16) A_i: rvs represent the number of transmission for any of STA in the i-th slot. Given the number of n-th transmission at the i-th slot is only on the number of Mi[n] and Mi (1 <= A_i <= Lmax, integer)
+隨機變數代表任意STA在第i slot的傳送次數
+# P_r(A_i=n): The probability that the STA
+def P_r_A_i_is_n(i,n):
+    return 
+
+
+# Eq.(18) MiSn formula, need Mi, M, R, P_r(A_ix) P_r (B_inx)
+第i slot，第n次傳送成功的STA數量
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 ＊ P_r(被x個STA選擇的RA-RU中，成功被capture的STA是第n次傳送)
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 ＊ P_r(成功被capture的STA是第n次傳送，被x個STA選擇的RA-RU中)
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 ＊ P_r(RA-RU中有第n次傳送STA，且第n次傳送的STA成功被capture，被x個STA選擇的RA-RU中)
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 ＊ P_r(STA 1 是第n次傳送，且這個STA成功被capture在x個STA選擇的RA-RU | STA 2 是第n次傳送，且這個STA成功被capture在x個STA選擇的RA-RU | ... STA x 是第n次傳送，且這個STA成功被capture在x個STA選擇的RA-RU)
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 ＊ \sum^{x}_{k=1} P_r(STA k 是第n次傳送，且這個STA成功被capture在x個STA選擇的RA-RU)
+-- Why: 因為STA成功彼此為互斥事件(只有一個STA能成功) P(A|B|C) = P(A) + P(B) + P(C)
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 * x * P_r(STA 是第n次傳送，且這個STA成功被capture在x個STA選擇的RA-RU) 
+-- Why: STA是第n次傳送，且被capture的機率與STA的index並無關係，跟傳送的功率跟距離有關，第n次傳送的功率每個STA都相同，『距離我們不知道，但全體STA的距離分佈相同，因此STA 1...STA x 應有同樣的機率被capture』(補充數學證明)
+後面引進D_1, D_2隨機變數代表距離
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 * x * P_r(STA 是第n次傳送) * P_r(第n次傳送STA成功被capture在x個STA選擇的RA-RU)
+-- Why:
+A=STA 是第n次傳送
+B=第n次傳送STA成功被capture在x個STA選擇的RA-RU
+B|A=給定STA是第n次傳送，第n次傳送STA成功被capture在x個STA選擇的RA-RU
+條件機率前後發生的機率為P(A) * P(B|A)
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 * x * P_r(STA 是第n次傳送) * P_r(第n次傳送STA的receive power / 剩下(x-1) STAs receive power 和 > 10^{C/10})
+＝sum_{x=1}^{M} 被x個STA選擇的RA-RU數量 * x * P_r(STA 是第n次傳送) * P_r(P[n] D_1^-r / (P[k_1] D_2^-r + ...+ P_[k_x-1] D_x^-r) > 10^{C/10})
+＝ N_U(M_i,R,1) * (M_i[n] / M_i)
++ N_U(M_i,R,2) * 2 * (M_i[n] / M_i) * P_r(P[n] D_1^-r / (P[k_1] D_2^-r) > 10^{C/10})
++ sum_{x=3}^{M} N_U(M_i,R,x) * x * (M_i[n] / M_i) * P_r(P[n] D_1^-r / (P[k_1] D_2^-r + ...+ P_[k_x-1] D_x^-r) > 10^{C/10})
+
+
+action item:
+
+
+
+Eric 認為10=11 
+Eric 認為11=12，Ray 詢問為什麼11變成12
+成功被capture的STA是第n次傳送 = RA-RU中有第n次傳送STA，且第n次傳送的STA成功被capture
+成功被capture的STA是第n次傳送 != 第n次傳送的STA成功被capture，因為第n次傳送被capture不代表RA-RU裡面有第n次傳送 （一個比賽裡面冠軍是年紀為18歲 != 18歲拿冠軍）
+
+Eric 認為11-12不成立，因為12後半段是給定"有第n次傳送的receive power"
+
+
+
+
+
+
+
+（STA是第n次傳送的機率 ＊ 第n次傳送）
